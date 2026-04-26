@@ -1490,7 +1490,10 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       compareCount.textContent = state.compare.length;
 
       document.getElementById('toggleNamesBtn').textContent = state.showNames ? 'Ocultar nomes' : 'Mostrar nomes';
-      document.getElementById('toggleNamesHero').textContent = state.showNames ? 'Ocultar nomes para treinar' : 'Mostrar nomes';
+      const toggleNamesHeroBtn = document.getElementById('toggleNamesHero');
+      if(toggleNamesHeroBtn){
+        toggleNamesHeroBtn.textContent = state.showNames ? 'Ocultar nomes para treinar' : 'Mostrar nomes';
+      }
       document.getElementById('toggleFavoritesBtn').textContent = state.favoritesOnly ? 'Mostrar todos' : 'Só favoritos';
       document.getElementById('zoomResetBtn').textContent = `${Math.round(state.zoom * 100)}%`;
       document.getElementById('tableScope').value = state.tableScope;
@@ -1622,7 +1625,6 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       render();
     });
     document.getElementById('toggleNamesBtn').onclick = () => { state.showNames = !state.showNames; render(); };
-    document.getElementById('toggleNamesHero').onclick = () => { state.showNames = !state.showNames; render(); };
     document.getElementById('toggleFavoritesBtn').onclick = () => { state.favoritesOnly = !state.favoritesOnly; render(); };
     document.getElementById('zoomOutBtn').onclick = () => { state.zoom = clamp(Number((state.zoom * 0.92).toFixed(2)), 0.72, 1.45); render(); };
     document.getElementById('zoomResetBtn').onclick = () => { state.zoom = 1; render(); };
@@ -1649,8 +1651,20 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       renderCompare();
     };
 
-    document.getElementById('jumpExplorer').onclick = () => setTab('explorer');
-    document.getElementById('startQuizQuick').onclick = () => { setTab('quiz'); renderQuizQuestion(); };
+    const toggleNamesHeroBtn = document.getElementById('toggleNamesHero');
+    if(toggleNamesHeroBtn){
+      toggleNamesHeroBtn.onclick = () => { state.showNames = !state.showNames; render(); };
+    }
+
+    const jumpExplorerBtn = document.getElementById('jumpExplorer');
+    if(jumpExplorerBtn){
+      jumpExplorerBtn.onclick = () => setTab('explorer');
+    }
+
+    const startQuizQuickBtn = document.getElementById('startQuizQuick');
+    if(startQuizQuickBtn){
+      startQuizQuickBtn.onclick = () => { setTab('quiz'); renderQuizQuestion(); };
+    }
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.onclick = () => setTab(btn.dataset.tab);
