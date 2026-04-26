@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Tabela periódica interativa com famílias, tendências, quiz e fichas de elementos para estudo de química."
+  />
+  <title>Tabela Periódica Interativa | tabela-periodica</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="tabela_periodica_interativa_sp_clean.css?v=20260423c" />
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="badge-row hero-badges">
+            <span class="badge">Blocos <strong>s</strong>, <strong>p</strong>, <strong>d</strong> e <strong>f</strong></span>
+            <span class="badge">Treino de memorização</span>
+          <span class="badge">Usos traduzidos</span>
+          </div>
+          <h1>Tabela Periódica Interativa</h1>
+          <p>
+            Explore grupos, períodos, famílias, tendências e quiz com cores por classe química,
+            incluindo lantanídeos, actinídeos e elementos com propriedades químicas desconhecidas.
+          </p>
+        </div>
+        <div class="chip-row">
+          <span class="chip">Tabela completa</span>
+          <span class="chip">Cores por classe</span>
+          <span class="chip">Ficha por símbolo</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <button class="primary" id="jumpExplorer">Abrir explorador</button>
+        <button class="ghost" id="startQuizQuick">Começar quiz</button>
+        <button class="ghost" id="toggleNamesHero">Ocultar nomes para treinar</button>
+        <a class="link-btn" href="compostos_inorganicos_interativo.html">Compostos inorgânicos</a>
+      </div>
+    </section>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-tab="explorer">Explorar</button>
+      <button class="tab-btn" data-tab="families">Famílias & sequências</button>
+      <button class="tab-btn" data-tab="trends">Tendências</button>
+      <button class="tab-btn" data-tab="quiz">Quiz</button>
+    </nav>
+
+    <section class="tab-panel active" id="tab-explorer">
+      <div class="panel explorer-layout" id="explorerSection">
+        <div class="left-col">
+          <div class="table-preview-mobile" id="tablePreviewMobile"></div>
+          <div class="table-wrap">
+            <div class="periodic" id="periodicGrid"></div>
+          </div>
+
+          <div class="legend" id="legend"></div>
+
+          <div class="controls">
+            <div class="toolbar">
+              <input id="searchInput" type="text" placeholder="Buscar por símbolo, nome, família, grupo, período..." />
+              <select id="tableScope">
+                <option value="full">Tabela completa</option>
+                <option value="sp">Tabela s + p</option>
+              </select>
+              <select id="colorMode">
+                <option value="category">Cores por classe química</option>
+                <option value="family">Cores por grupo/família</option>
+                <option value="classification">Cores por classificação</option>
+                <option value="importance">Cores por prioridade</option>
+                <option value="electron">Distribuição eletrônica</option>
+                <option value="electronegativity">Eletronegatividade</option>
+              </select>
+              <select id="filterType">
+                <option value="all">Todos</option>
+                <option value="metal">Metais</option>
+                <option value="ametal">Ametais</option>
+                <option value="semimetal">Semimetais</option>
+                <option value="noble">Gases nobres</option>
+                <option value="synthetic">Sintéticos/superpesados</option>
+                <option value="important">Só prioritários</option>
+              </select>
+              <select id="filterBlock">
+                <option value="all">Todos os blocos</option>
+                <option value="s">Só bloco s</option>
+                <option value="p">Só bloco p</option>
+                <option value="d">Só bloco d</option>
+                <option value="f">Só bloco f</option>
+              </select>
+            </div>
+            <div class="toggle-row split">
+              <div class="segmented" id="familyFilters"></div>
+              <div class="segmented">
+                <button class="small" id="zoomOutBtn" title="Diminuir zoom da tabela">−</button>
+                <button class="small" id="zoomResetBtn" title="Zoom atual da tabela">100%</button>
+                <button class="small" id="zoomInBtn" title="Aumentar zoom da tabela">+</button>
+                <button class="small" id="toggleNamesBtn">Ocultar nomes</button>
+                <button class="small" id="toggleFavoritesBtn">Só favoritos</button>
+                <button class="small" id="clearFiltersBtn">Limpar filtros</button>
+              </div>
+            </div>
+            <div class="stats">
+              <div class="stat"><div class="muted">Elementos visíveis</div><div class="v" id="visibleCount">50</div></div>
+              <div class="stat"><div class="muted">Favoritos</div><div class="v" id="favoriteCount">0</div></div>
+              <div class="stat"><div class="muted">Comparando</div><div class="v" id="compareCount">0</div></div>
+              <div class="stat"><div class="muted">Modo atual</div><div class="v" id="modeLabel">Famílias</div></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="drawer" id="elementPopover">
+          <div class="drawer-card" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+            <div class="drawer-header">
+              <div>
+                <div class="muted drawer-kicker">Ficha do elemento</div>
+                <div class="drawer-heading">Detalhes do elemento</div>
+              </div>
+              <div class="segmented">
+                <button class="small ghost" id="randomElementBtn">Elemento aleatório</button>
+                <button class="small ghost" id="closeDrawerBtn">Fechar</button>
+              </div>
+            </div>
+
+            <div class="drawer-empty" id="drawerEmpty">
+              <p class="tight">Clique em um elemento para abrir a ficha detalhada com descrição, usos, família, importância para decorar e atalhos externos.</p>
+            </div>
+
+            <div class="drawer-content" id="drawerContent">
+              <div class="split">
+                <div>
+                  <div class="badge-row">
+                    <span class="mini-badge" id="drawerTag1"></span>
+                    <span class="mini-badge" id="drawerTag2"></span>
+                    <span class="mini-badge" id="drawerTag3"></span>
+                  </div>
+                  <h2 id="drawerTitle" class="drawer-title"></h2>
+                  <div class="muted" id="drawerSubtitle"></div>
+                </div>
+                <div class="segmented">
+                  <button class="small" id="favoriteBtn">★ Favoritar</button>
+                  <button class="small" id="compareBtn">⇄ Comparar</button>
+                  <button class="small" id="copyBtn">Copiar símbolo</button>
+                </div>
+              </div>
+
+              <div class="symbol-card" id="mediaBox">
+                <div class="symbol-mark">
+                  <div class="atomic-number">1</div>
+                  <div class="symbol">H</div>
+                  <div class="element-name">Hidrogênio</div>
+                </div>
+                <div class="symbol-card-details">
+                  <div class="headline">Símbolo do elemento</div>
+                  <div class="line">Clique em uma casa da tabela para abrir a ficha.</div>
+                </div>
+              </div>
+
+              <div class="info-grid" id="infoGrid"></div>
+
+              <div class="story">
+                <h3>Gancho de memória</h3>
+                <div id="memoryNote"></div>
+              </div>
+
+              <div class="story">
+                <h3>História rápida</h3>
+                <div id="storyText"></div>
+              </div>
+
+              <div class="story">
+                <h3>Descrição e usos</h3>
+                <div id="usageSummary">Selecione um elemento para ver a descrição de uso.</div>
+              </div>
+
+              <div class="quick-links">
+                <a class="link-btn primary" id="wikiLink" href="#" target="_blank" rel="noopener noreferrer">Wikipedia</a>
+                <a class="link-btn" id="youtubeLink" href="#" target="_blank" rel="noopener noreferrer">Vídeos no YouTube</a>
+              </div>
+
+              <div class="compare-box" id="compareBox">
+                <div class="split">
+                  <h3 class="compare-title">Comparador</h3>
+                  <button class="small ghost" id="clearCompareBtn">Limpar comparação</button>
+                </div>
+                <div class="compare-grid" id="compareGrid"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-families">
+      <div class="section-grid">
+        <div class="card">
+          <h2>Famílias</h2>
+          <p class="footer-note">
+            A ideia aqui é decorar as <strong>colunas</strong>. Em geral, elementos de uma mesma família têm
+            o mesmo número de elétrons na camada de valência e costumam exibir comportamentos parecidos.
+          </p>
+          <div class="family-list" id="familyList"></div>
+        </div>
+        <div class="card">
+          <h2>Sequências por período</h2>
+          <p class="footer-note">
+            Agora o foco são as <strong>linhas</strong>. A leitura padrão dos blocos s e p é:
+            <strong>2 casas à esquerda + 6 casas à direita</strong> em quase todos os períodos.
+          </p>
+          <div class="period-list" id="periodList"></div>
+        </div>
+        <div class="card section-span-full">
+          <h2>Classes químicas</h2>
+          <p class="footer-note">
+            Aqui ficam os resumos usados pela legenda interativa. Cada bloco explica o comportamento mais marcante daquela classe e serve como destino quando você clica na legenda.
+          </p>
+          <div class="family-list" id="categoryGuideList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-trends">
+      <div class="trend-grid">
+        <div class="trend">
+          <h2>Raio atômico</h2>
+          <small>Aumenta para <strong>baixo</strong> e para a <strong>esquerda</strong>. Em geral, mais camadas = átomo maior.</small>
+          <div class="trend-map-wrap"><div class="trend-map" id="trendRadius"></div></div>
+          <div class="trend-key"><span>menor</span><span class="trend-ramp"></span><span>maior</span></div>
+        </div>
+
+        <div class="trend">
+          <h2>Eletronegatividade</h2>
+          <small>Aumenta para <strong>cima</strong> e para a <strong>direita</strong>. O flúor é a referência clássica de valor alto.</small>
+          <div class="trend-map-wrap"><div class="trend-map" id="trendElectro"></div></div>
+          <div class="trend-key"><span>menor</span><span class="trend-ramp electro"></span><span>maior</span></div>
+        </div>
+
+        <div class="trend">
+          <h2>Energia de ionização</h2>
+          <small>Também cresce para <strong>cima</strong> e para a <strong>direita</strong>. Ler assim ajuda: fica mais difícil arrancar elétron.</small>
+          <div class="trend-map-wrap"><div class="trend-map" id="trendIonization"></div></div>
+          <div class="trend-key"><span>menor</span><span class="trend-ramp energy"></span><span>maior</span></div>
+        </div>
+
+        <div class="trend">
+          <h2>Caráter metálico</h2>
+          <small>Cresce para <strong>baixo</strong> e para a <strong>esquerda</strong>. Em termos intuitivos: o átomo tende mais a “soltar” elétrons.</small>
+          <div class="trend-map-wrap"><div class="trend-map" id="trendMetallic"></div></div>
+          <div class="trend-key"><span>menor</span><span class="trend-ramp"></span><span>maior</span></div>
+        </div>
+
+        <div class="card section-span-full">
+          <h2>Atalhos mentais úteis</h2>
+          <div class="footer-note">
+            <p><strong>Esquerda e baixo</strong> → mais metálico, átomo maior, tende mais a perder elétrons.</p>
+            <p><strong>Direita e cima</strong> → mais eletronegativo, maior energia de ionização, caráter mais ametálico.</p>
+            <p><strong>Regra prática para decorar</strong> → os grupos 1, 2, 17 e 18 são os mais “visíveis” no começo do curso. Depois, vá consolidando 13–16.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-quiz">
+      <div class="panel">
+        <div class="quiz-layout">
+          <div class="quiz-card">
+            <div class="muted quiz-kicker">Modo treino</div>
+            <div class="quiz-status" id="quizPrompt">Clique em “Nova pergunta”</div>
+            <div class="hint" id="quizHint">
+              O quiz usa os mesmos blocos s e p da página principal. Ele alterna perguntas por nome, símbolo, família, grupo e período.
+            </div>
+            <div class="segmented">
+              <button class="primary" id="newQuizBtn">Nova pergunta</button>
+              <button class="ghost" id="showAnswerBtn">Mostrar resposta</button>
+              <button class="ghost" id="resetQuizBtn">Zerar placar</button>
+            </div>
+            <div class="stats stats-compact">
+              <div class="stat"><div class="muted">Acertos</div><div class="v" id="quizHits">0</div></div>
+              <div class="stat"><div class="muted">Erros</div><div class="v" id="quizMisses">0</div></div>
+            </div>
+          </div>
+
+          <div class="quiz-wrap">
+            <div class="quiz-grid" id="quizGrid"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Como usei esta página</h2>
+      <p class="footer-note">
+        A lista de elementos abre em uma visão focada nos blocos <strong>s</strong> e <strong>p</strong>, com opção de tabela completa incluindo os blocos <strong>d</strong> e <strong>f</strong>.
+        Os nomes oficiais modernos dos elementos seguem a nomenclatura da IUPAC, incluindo os superpesados do sétimo período.
+        As descrições de uso ficam nos dados locais desta página, funcionando offline.
+        Elas são derivadas de <strong>The Periodic Table of the Elements, in Pictures and Words</strong> e da lista de usos de Keith Enevoldsen, sob licença CC BY-SA 4.0.
+        A Wikipedia fica apenas como link externo para leitura adicional.
+      </p>
+      <div class="quick-links">
+        <a class="link-btn" href="https://iupac.org/what-we-do/periodic-table-of-elements/" target="_blank" rel="noopener noreferrer">Fonte: IUPAC</a>
+        <a class="link-btn" href="https://elements.wlonk.com/index.html" target="_blank" rel="noopener noreferrer">Descrições: elements.wlonk.com</a>
+        <a class="link-btn" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">Licença CC BY-SA 4.0</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="tabela_periodica_interativa_sp_clean.js?v=20260423c"></script>
+</body>
+</html>
