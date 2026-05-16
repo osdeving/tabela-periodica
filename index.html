@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="Tabela periódica interativa com famílias, tendências, quiz e fichas de elementos para estudo de química."
+    content="Tabela periódica interativa com apresentação animada, famílias, tendências, quiz e fichas de elementos para estudo de química."
   />
   <title>Tabela Periódica Interativa | tabela-periodica</title>
   <link rel="icon" href="data:," />
-  <link rel="stylesheet" href="tabela_periodica_interativa_sp_clean.css?v=20260423c" />
+  <link rel="stylesheet" href="tabela_periodica_interativa_sp_clean.css?v=20260516b" />
 </head>
 <body>
   <div class="app">
@@ -21,13 +21,14 @@
         </div>
       </div>
       <div class="hero-actions">
+        <a class="link-btn primary" href="periodos_apresentacao.html">Apresentação animada</a>
         <button class="primary" id="startQuizQuick">Começar quiz</button>
       </div>
     </section>
 
     <nav class="tabs" id="tabs">
       <button class="tab-btn active" data-tab="explorer">Explorar</button>
-      <button class="tab-btn" data-tab="families">Famílias & sequências</button>
+      <button class="tab-btn" data-tab="families">Famílias, períodos & colunas</button>
       <button class="tab-btn" data-tab="trends">Tendências</button>
       <button class="tab-btn" data-tab="quiz">Quiz</button>
     </nav>
@@ -178,6 +179,46 @@
 
     <section class="tab-panel" id="tab-families">
       <div class="section-grid">
+        <div class="period-lesson section-span-full" id="periodLesson">
+          <div class="period-lesson-header">
+            <div>
+              <h2>Apresentação animada: períodos e colunas</h2>
+              <p class="footer-note">
+                A apresentação em tela cheia monta a tabela como uma HQ: primeiro os períodos, depois as colunas, grupos, famílias e classificações em metais, ametais, semimetais e gases nobres.
+              </p>
+            </div>
+            <div class="period-lesson-toolbar" aria-label="Controles dos períodos">
+              <a class="link-btn primary" href="periodos_apresentacao.html">Abrir apresentação</a>
+              <button class="primary" id="periodReplayBtn" type="button">Rodar de novo</button>
+              <button class="ghost" id="periodPrevBtn" type="button">Anterior</button>
+              <button class="ghost" id="periodNextBtn" type="button">Próximo</button>
+              <button class="ghost" id="periodPlayBtn" type="button" aria-pressed="false">Reproduzir</button>
+            </div>
+          </div>
+
+          <div class="period-progress" aria-hidden="true">
+            <span id="periodProgressBar"></span>
+          </div>
+
+          <div class="period-lesson-body">
+            <div class="period-stage" id="periodStage" aria-live="polite">
+              <div class="period-stage-title">
+                <div>
+                  <div class="muted" id="periodStageKicker">Período</div>
+                  <strong id="periodStageTitle">1º período (I)</strong>
+                </div>
+                <span class="mini-badge" id="periodStageCount">2 elementos</span>
+              </div>
+              <div class="period-stage-scroll">
+                <div class="period-build-table" id="periodBuildTable"></div>
+              </div>
+              <div class="period-dots" id="periodDots" aria-label="Selecionar período"></div>
+            </div>
+
+            <aside class="period-narrative" id="periodNarrative"></aside>
+          </div>
+        </div>
+
         <div class="card">
           <h2>Famílias</h2>
           <p class="footer-note">
@@ -277,6 +318,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="tabela_periodica_interativa_sp_clean.js?v=20260423c"></script>
+  <script src="tabela_periodica_interativa_sp_clean.js?v=20260516b"></script>
 </body>
 </html>

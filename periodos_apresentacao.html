@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Apresentação animada sobre períodos, colunas, grupos, famílias e classificações da tabela periódica."
+  />
+  <title>Períodos e Colunas em Movimento | Apresentação</title>
+  <link rel="icon" href="data:," />
+  <style>
+    :root{
+      --bg:#8fb1c4;
+      --panel:#f8fdff;
+      --text:#17213e;
+      --muted:#52647a;
+      --accent:#1d4ed8;
+      --shadow:0 12px 30px rgba(34, 55, 76, .18);
+      --tile:38px;
+      --cat-alkali:#a43b36;
+      --cat-alkaline:#c8952b;
+      --cat-transition:#45449a;
+      --cat-post-transition:#81798f;
+      --cat-metalloid:#3e854c;
+      --cat-poly-nonmetal:#5e3b91;
+      --cat-diatomic:#97641f;
+      --cat-noble:#1f5726;
+      --cat-lanthanide:#a64278;
+      --cat-actinide:#6e3a86;
+      --cat-unknown:#0b0b33;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      overflow:hidden;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0) 300px),
+        var(--bg);
+    }
+    button,a{
+      appearance:none;
+      border:1px solid rgba(16,24,40,.09);
+      border-radius:8px;
+      background:#ffffff;
+      color:var(--text);
+      box-shadow:0 0 0 1px rgba(16,24,40,.05) inset;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:900;
+      text-decoration:none;
+      transition:transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    button:hover,a:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(17,24,39,.08);
+      background:#f9fbff;
+    }
+    button.primary{
+      background:#1d4ed8;
+      border-color:#1d4ed8;
+      color:#ffffff;
+    }
+    .deck{
+      width:100vw;
+      height:100dvh;
+      display:grid;
+      grid-template-rows:auto minmax(0,1fr) auto;
+      gap:clamp(8px, 1.4vh, 14px);
+      padding:clamp(8px, 1.4vw, 18px);
+    }
+    .topbar,
+    .controlbar,
+    .slide-card{
+      border:1px solid rgba(255,255,255,.54);
+      border-radius:8px;
+      background:rgba(248,253,255,.86);
+      box-shadow:var(--shadow);
+    }
+    .topbar{
+      min-height:0;
+      padding:clamp(8px, 1.2vw, 14px);
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      gap:14px;
+      align-items:center;
+    }
+    .back-link{
+      min-height:38px;
+      padding:8px 11px;
+      font-size:.84rem;
+      white-space:nowrap;
+    }
+    .deck-title{
+      min-width:0;
+      display:grid;
+      gap:2px;
+    }
+    .deck-title span{
+      color:var(--muted);
+      font-size:.76rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .deck-title h1{
+      margin:0;
+      font-size:clamp(1.25rem, 2.1vw, 2.05rem);
+      line-height:1.05;
+      letter-spacing:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .counter{
+      min-width:66px;
+      text-align:center;
+      padding:9px 10px;
+      border-radius:999px;
+      background:#ffffff;
+      color:#2c3d56;
+      border:1px solid rgba(16,24,40,.08);
+      font-weight:900;
+    }
+    .slide{
+      min-height:0;
+      display:grid;
+    }
+    .slide-card{
+      min-height:0;
+      padding:clamp(10px, 1.45vw, 18px);
+      display:grid;
+      grid-template-rows:auto auto minmax(0,1fr);
+      gap:clamp(8px, 1.3vh, 14px);
+      overflow:hidden;
+    }
+    .slide-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      min-height:0;
+    }
+    .slide-kicker{
+      color:var(--muted);
+      font-weight:850;
+      font-size:clamp(.82rem, 1.4vw, 1rem);
+    }
+    .slide-head h2{
+      margin:2px 0 0;
+      font-size:clamp(1.55rem, 4vw, 3.1rem);
+      line-height:.98;
+      letter-spacing:0;
+    }
+    .slide-pill{
+      flex:0 0 auto;
+      align-self:flex-start;
+      border-radius:999px;
+      padding:9px 13px;
+      background:#ffffff;
+      border:1px solid rgba(16,24,40,.08);
+      color:#2d3e55;
+      font-size:clamp(.82rem, 1.15vw, .98rem);
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .progress{
+      height:8px;
+      border-radius:999px;
+      background:rgba(15,23,42,.08);
+      overflow:hidden;
+    }
+    .progress span{
+      display:block;
+      width:14%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 44%, #ffffff));
+      transition:width .25s ease;
+    }
+    .stage{
+      min-height:0;
+      display:grid;
+      grid-template-columns:minmax(220px, .85fr) minmax(420px, 1.4fr) minmax(220px, .85fr);
+      grid-template-rows:minmax(0,1fr) minmax(0,1fr);
+      gap:clamp(10px, 1.5vw, 18px);
+      align-items:center;
+    }
+    .board-shell{
+      grid-column:2;
+      grid-row:1 / span 2;
+      min-width:0;
+      min-height:0;
+      height:100%;
+      display:grid;
+      align-items:center;
+      justify-items:center;
+      padding:4px;
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(222,244,253,.72), rgba(246,252,255,.72));
+      border:1px solid rgba(99,134,154,.24);
+      box-shadow:5px 5px 0 rgba(43,76,91,.14);
+    }
+    .periodic-board{
+      display:grid;
+      grid-template-columns:calc(var(--tile) * .72) repeat(18, var(--tile));
+      grid-template-rows:repeat(9, var(--tile));
+      gap:max(2px, calc(var(--tile) * .09));
+      align-items:stretch;
+      justify-content:center;
+      isolation:isolate;
+    }
+    .periodic-board.summary-mode{
+      width:min(100%, 880px);
+      display:grid;
+      grid-template-columns:1.2fr .78fr 1.08fr .94fr;
+      grid-auto-rows:minmax(46px, auto);
+      gap:4px;
+      align-content:center;
+      justify-content:center;
+    }
+    .summary-cell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:0;
+      padding:7px 9px;
+      color:#211b1f;
+      background:#fffaf2;
+      border:1px solid rgba(255,255,255,.86);
+      font-size:clamp(.74rem, 1.18vw, 1rem);
+      line-height:1.08;
+      font-weight:850;
+      text-align:center;
+    }
+    .summary-cell.alt{background:#fdeccc}
+    .summary-cell strong{font-weight:950}
+    .periodic-board.family-table-mode{
+      width:min(100%, 920px);
+      display:grid;
+      grid-template-columns:.58fr 1.1fr 2.75fr;
+      grid-auto-rows:minmax(62px, auto);
+      gap:4px;
+      align-content:center;
+      justify-content:center;
+    }
+    .family-table-cell{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:0;
+      padding:7px 9px;
+      color:#211b1f;
+      background:#fffaf2;
+      border:1px solid rgba(255,255,255,.86);
+      font-size:clamp(.66rem, 1vw, .9rem);
+      line-height:1.14;
+      font-weight:820;
+      text-align:center;
+    }
+    .family-table-cell.header{
+      background:#f9d69c;
+      font-weight:950;
+    }
+    .family-table-cell.alt{background:#fdeccc}
+    .family-table-cell.wide{text-align:left;justify-content:flex-start}
+    .periodic-board.group-mode{
+      grid-template-rows:calc(var(--tile) * .56) repeat(9, var(--tile));
+    }
+    .group-label{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-width:0;
+      min-height:0;
+      color:#17213e;
+      font-size:calc(var(--tile) * .24);
+      line-height:1;
+      font-weight:950;
+      text-align:center;
+      overflow:hidden;
+    }
+    .group-label .iupac{
+      color:#1d4ed8;
+      font-size:.9em;
+      line-height:1;
+    }
+    .mini-element.map-tile{
+      color:#17213e;
+      text-shadow:none;
+      opacity:.82;
+      filter:none;
+      border-color:rgba(17,24,39,.16);
+      box-shadow:1px 1px 0 rgba(43,76,91,.14);
+    }
+    .mini-element.map-tile.active{
+      color:#17213e;
+      filter:none;
+      box-shadow:3px 3px 0 rgba(43,76,91,.22), 0 1px 0 rgba(255,255,255,.32) inset;
+    }
+    .mini-element.map-tile.dimmed{
+      opacity:.18;
+      filter:saturate(.4);
+    }
+    .mini-element.hydrogen-out{
+      background:#ffffff!important;
+      color:#17213e;
+      opacity:1;
+    }
+    .row-label{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:6px;
+      border:1px solid rgba(16,24,40,.08);
+      color:#40526e;
+      background:rgba(255,255,255,.86);
+      font-size:calc(var(--tile) * .32);
+      font-weight:900;
+    }
+    .row-label.active{
+      color:#ffffff;
+      background:var(--accent);
+      border-color:color-mix(in srgb, var(--accent) 70%, #ffffff);
+      box-shadow:2px 2px 0 rgba(43,76,91,.18);
+    }
+    .mini-element{
+      --tile-color:#64748b;
+      --entry-x:0px;
+      --entry-y:-56px;
+      --delay:0ms;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:6px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 45%),
+        var(--tile-color);
+      color:#ffffff;
+      box-shadow:2px 2px 0 rgba(43,76,91,.2), 0 1px 0 rgba(255,255,255,.2) inset;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:0;
+      min-height:0;
+      padding:0;
+      font-size:calc(var(--tile) * .34);
+      font-weight:950;
+      line-height:1;
+      opacity:.16;
+      filter:saturate(.68);
+      transform:scale(.96);
+    }
+    .mini-element.active{
+      opacity:1;
+      filter:saturate(1.08) brightness(1.05);
+      animation:flyIn .72s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:var(--delay);
+      z-index:3;
+      box-shadow:4px 4px 0 rgba(43,76,91,.34), 0 1px 0 rgba(255,255,255,.25) inset;
+    }
+    .mini-element.anchor{
+      outline:2px solid rgba(255,255,255,.96);
+      outline-offset:1px;
+    }
+    @keyframes flyIn{
+      0%{opacity:0;transform:translate(var(--entry-x), var(--entry-y)) scale(.72) rotate(-2deg)}
+      72%{opacity:1;transform:translate(2px, -2px) scale(1.08)}
+      100%{opacity:1;transform:none}
+    }
+    .bubble{
+      position:relative;
+      border:3px solid #111827;
+      border-radius:22px;
+      background:#ffffff;
+      box-shadow:7px 8px 0 rgba(17,24,39,.14);
+      padding:clamp(10px, 1.35vw, 16px);
+      min-width:0;
+      max-height:100%;
+      overflow:hidden;
+    }
+    .deck.animating .board-shell{
+      animation:panelArrive .42s cubic-bezier(.2,.8,.2,1) both;
+      animation-delay:.08s;
+    }
+    .deck.animating .bubble-main{
+      animation:bubbleFromLeft .5s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:.48s;
+    }
+    .deck.animating .bubble-side{
+      animation:bubbleFromRight .5s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:1.12s;
+    }
+    .deck.animating .bubble-note{
+      animation:bubbleFromLeft .5s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:1.78s;
+    }
+    .deck.animating .fact{
+      animation:factPop .34s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:calc(1.28s + var(--fact-delay, 0ms));
+    }
+    .deck.animating .summary-cell{
+      animation:summaryIn .34s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:var(--summary-delay, .2s);
+    }
+    .deck.animating .family-table-cell,
+    .deck.animating .group-label{
+      animation:summaryIn .34s cubic-bezier(.18,.88,.2,1) both;
+      animation-delay:var(--summary-delay, .2s);
+    }
+    .bubble::before,
+    .bubble::after{
+      content:"";
+      position:absolute;
+      width:0;
+      height:0;
+    }
+    .bubble-main{
+      grid-column:1;
+      grid-row:1;
+      align-self:end;
+    }
+    .bubble-main::before{
+      right:-22px;
+      top:44%;
+      border-top:13px solid transparent;
+      border-bottom:13px solid transparent;
+      border-left:22px solid #111827;
+    }
+    .bubble-main::after{
+      right:-16px;
+      top:calc(44% + 3px);
+      border-top:10px solid transparent;
+      border-bottom:10px solid transparent;
+      border-left:18px solid #ffffff;
+    }
+    .bubble-side{
+      grid-column:3;
+      grid-row:1 / span 2;
+      align-self:center;
+      background:color-mix(in srgb, var(--accent) 8%, #ffffff);
+    }
+    .bubble-side::before{
+      left:-22px;
+      top:42%;
+      border-top:13px solid transparent;
+      border-bottom:13px solid transparent;
+      border-right:22px solid #111827;
+    }
+    .bubble-side::after{
+      left:-16px;
+      top:calc(42% + 3px);
+      border-top:10px solid transparent;
+      border-bottom:10px solid transparent;
+      border-right:18px solid color-mix(in srgb, var(--accent) 8%, #ffffff);
+    }
+    .bubble-note{
+      grid-column:1;
+      grid-row:2;
+      align-self:start;
+      border-width:2px;
+      border-radius:18px;
+      background:#f8fbff;
+      box-shadow:5px 6px 0 rgba(17,24,39,.1);
+    }
+    .bubble-note::before{
+      right:-18px;
+      top:28%;
+      border-top:10px solid transparent;
+      border-bottom:10px solid transparent;
+      border-left:18px solid #111827;
+    }
+    .bubble-note::after{
+      right:-14px;
+      top:calc(28% + 2px);
+      border-top:8px solid transparent;
+      border-bottom:8px solid transparent;
+      border-left:16px solid #f8fbff;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      min-height:26px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:color-mix(in srgb, var(--accent) 12%, #ffffff);
+      border:1px solid color-mix(in srgb, var(--accent) 25%, rgba(16,24,40,.08));
+      color:#24334c;
+      font-size:clamp(.7rem, 1vw, .84rem);
+      line-height:1;
+      font-weight:950;
+    }
+    .burst{
+      display:inline-grid;
+      place-items:center;
+      min-width:64px;
+      min-height:64px;
+      padding:8px;
+      margin-bottom:8px;
+      color:#ffffff;
+      background:var(--accent);
+      clip-path:polygon(50% 0%,61% 26%,88% 13%,74% 40%,100% 50%,74% 60%,88% 87%,61% 74%,50% 100%,39% 74%,12% 87%,26% 60%,0% 50%,26% 40%,12% 13%,39% 26%);
+      font-size:clamp(.85rem, 1.2vw, 1rem);
+      font-weight:950;
+      text-align:center;
+    }
+    .bubble h3{
+      margin:8px 0 8px;
+      font-size:clamp(.98rem, 1.65vw, 1.5rem);
+      line-height:1.02;
+      letter-spacing:0;
+    }
+    .bubble p{
+      margin:0;
+      color:#374860;
+      font-size:clamp(.78rem, 1.22vw, .98rem);
+      line-height:1.34;
+      font-weight:750;
+    }
+    .deck[data-type="columns"] .bubble,
+    .deck[data-type="classification"] .bubble{
+      padding:clamp(8px, 1.1vw, 13px);
+    }
+    .deck[data-type="columns"] .bubble h3,
+    .deck[data-type="classification"] .bubble h3{
+      margin:5px 0 6px;
+      font-size:clamp(.96rem, 1.45vw, 1.32rem);
+      line-height:1.04;
+    }
+    .deck[data-type="columns"] .tag,
+    .deck[data-type="classification"] .tag{
+      min-height:22px;
+      padding:4px 8px;
+      font-size:clamp(.62rem, .9vw, .74rem);
+    }
+    .deck[data-type="note"] .bubble p,
+    .deck[data-type="intro"] .bubble p,
+    .deck[data-type="columns"] .bubble p,
+    .deck[data-type="classification"] .bubble p{
+      font-size:clamp(.76rem, 1.1vw, .96rem);
+      line-height:1.28;
+    }
+    .bubble-note p{
+      font-size:clamp(.76rem, 1.08vw, .92rem);
+    }
+    .fact-grid{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+    .fact{
+      border-radius:10px;
+      background:#ffffff;
+      border:1px solid rgba(16,24,40,.08);
+      padding:8px 10px;
+    }
+    .fact:nth-child(1){--fact-delay:0ms}
+    .fact:nth-child(2){--fact-delay:90ms}
+    .fact:nth-child(3){--fact-delay:180ms}
+    .fact:nth-child(4){--fact-delay:270ms}
+    .fact:nth-child(5){--fact-delay:360ms}
+    .fact:nth-child(6){--fact-delay:450ms}
+    .fact span{
+      display:block;
+      color:#66758c;
+      font-size:.68rem;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      line-height:1.1;
+    }
+    .fact strong{
+      display:block;
+      margin-top:4px;
+      color:#17213e;
+      font-size:clamp(.84rem, 1.3vw, 1.05rem);
+      line-height:1.16;
+      overflow-wrap:anywhere;
+    }
+    .controlbar{
+      min-height:0;
+      padding:8px;
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+    }
+    .control-group,
+    .dots{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      flex-wrap:wrap;
+    }
+    .control-group button{
+      min-height:38px;
+      padding:8px 12px;
+      white-space:nowrap;
+    }
+    .dots{
+      justify-content:center;
+    }
+    .dot{
+      width:32px;
+      height:32px;
+      padding:0;
+      border-radius:999px;
+      color:#53647b;
+      font-size:.9rem;
+    }
+    .dot.active{
+      color:#ffffff;
+      background:var(--accent);
+      border-color:var(--accent);
+    }
+    .hint{
+      color:#52647a;
+      font-size:.82rem;
+      font-weight:800;
+      text-align:right;
+      white-space:nowrap;
+    }
+    .loading{
+      grid-column:1 / -1;
+      place-self:center;
+      padding:18px;
+      border-radius:8px;
+      background:#ffffff;
+      color:#394b62;
+      font-weight:850;
+    }
+    @keyframes panelArrive{
+      0%{opacity:0;transform:translateY(18px) scale(.985)}
+      100%{opacity:1;transform:none}
+    }
+    @keyframes bubbleFromLeft{
+      0%{opacity:0;transform:translateX(-36px) rotate(-1deg) scale(.96)}
+      72%{opacity:1;transform:translateX(2px) rotate(.3deg) scale(1.02)}
+      100%{opacity:1;transform:none}
+    }
+    @keyframes bubbleFromRight{
+      0%{opacity:0;transform:translateX(36px) rotate(1deg) scale(.96)}
+      72%{opacity:1;transform:translateX(-2px) rotate(-.3deg) scale(1.02)}
+      100%{opacity:1;transform:none}
+    }
+    @keyframes factPop{
+      0%{opacity:0;transform:translateY(12px) scale(.96)}
+      100%{opacity:1;transform:none}
+    }
+    @keyframes summaryIn{
+      0%{opacity:0;transform:translateY(14px) scale(.96)}
+      100%{opacity:1;transform:none}
+    }
+    @media (max-width:980px){
+      .stage{
+        grid-template-columns:1fr 1fr;
+        grid-template-rows:auto minmax(0,1fr) auto;
+      }
+      .bubble-main{grid-column:1;grid-row:1;align-self:stretch}
+      .bubble-side{grid-column:2;grid-row:1;align-self:stretch}
+      .bubble-note{grid-column:1 / -1;grid-row:3}
+      .board-shell{grid-column:1 / -1;grid-row:2;min-height:0}
+      .bubble-main::before,.bubble-main::after,
+      .bubble-side::before,.bubble-side::after,
+      .bubble-note::before,.bubble-note::after{display:none}
+      .bubble{border-radius:18px;box-shadow:5px 6px 0 rgba(17,24,39,.12)}
+      .fact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:620px){
+      .deck{
+        padding:7px;
+        gap:7px;
+      }
+      .topbar{
+        grid-template-columns:minmax(0,1fr) auto;
+      }
+      .back-link{display:none}
+      .deck-title h1{font-size:1.16rem}
+      .deck-title span{font-size:.65rem}
+      .slide-card{padding:10px;gap:7px}
+      .slide-head h2{font-size:1.55rem}
+      .slide-pill{padding:7px 10px;font-size:.76rem}
+      .periodic-board.summary-mode{
+        grid-template-columns:1.35fr .72fr 1.08fr .86fr;
+        grid-auto-rows:minmax(17px, auto);
+        gap:2px;
+      }
+      .periodic-board.family-table-mode{
+        grid-template-columns:.55fr 1fr 2.4fr;
+        grid-auto-rows:minmax(28px, auto);
+        gap:2px;
+      }
+      .family-table-cell{
+        padding:3px 4px;
+        font-size:.48rem;
+        line-height:1.08;
+      }
+      .periodic-board.group-mode{
+        grid-template-rows:calc(var(--tile) * .52) repeat(9, var(--tile));
+      }
+      .group-label{font-size:calc(var(--tile) * .2)}
+      .summary-cell{
+        min-height:0;
+        padding:1px 2px;
+        justify-content:center;
+        font-size:.42rem;
+        line-height:1;
+      }
+      .stage{
+        grid-template-columns:1fr;
+        grid-template-rows:auto minmax(150px, .72fr) auto auto;
+        gap:7px;
+      }
+      .bubble-main{grid-column:1;grid-row:1}
+      .board-shell{grid-column:1;grid-row:2}
+      .bubble-side{grid-column:1;grid-row:3}
+      .bubble-note{grid-column:1;grid-row:4}
+      .bubble{
+        border-width:2px;
+        padding:9px;
+        box-shadow:4px 5px 0 rgba(17,24,39,.1);
+      }
+      .bubble h3{margin:5px 0 5px;font-size:1.02rem}
+      .bubble p{font-size:.78rem;line-height:1.28}
+      .deck[data-type="note"] .bubble p,
+      .deck[data-type="intro"] .bubble p,
+      .deck[data-type="columns"] .bubble p,
+      .deck[data-type="classification"] .bubble p{font-size:.66rem;line-height:1.18}
+      .bubble-note p{font-size:.72rem}
+      .tag{min-height:22px;padding:4px 8px;font-size:.66rem}
+      .burst{display:none}
+      .fact-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px;
+        margin-top:8px;
+      }
+      .fact{padding:6px 7px}
+      .fact span{font-size:.56rem}
+      .fact strong{font-size:.76rem}
+      .controlbar{
+        grid-template-columns:1fr;
+        gap:7px;
+      }
+      .control-group{
+        display:grid;
+        grid-template-columns:repeat(4, minmax(0,1fr));
+        gap:6px;
+      }
+      .control-group button{
+        min-height:34px;
+        padding:7px 5px;
+        font-size:.76rem;
+      }
+      .dots{display:none}
+      .hint{text-align:center;font-size:.68rem}
+    }
+    @media (prefers-reduced-motion:reduce){
+      button,a,.progress span{transition:none}
+      .mini-element.active{animation:none}
+      .deck.animating .board-shell,
+      .deck.animating .bubble-main,
+      .deck.animating .bubble-side,
+      .deck.animating .bubble-note,
+      .deck.animating .fact,
+      .deck.animating .summary-cell{animation:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+    <header class="topbar">
+      <a class="back-link" href="index.html">Voltar ao site</a>
+      <div class="deck-title">
+        <span>Modo apresentação</span>
+      </div>
+      <div class="counter" id="counter">1/7</div>
+    </header>
+
+    <main class="slide">
+      <section class="slide-card" aria-live="polite">
+        <div class="slide-head">
+          <div>
+            <div class="slide-kicker" id="slideKicker">Período 1</div>
+            <h2 id="slideTitle">1º período (I)</h2>
+          </div>
+          <div class="slide-pill" id="slideCount">2 elementos</div>
+        </div>
+
+        <div class="progress" aria-hidden="true">
+          <span id="progressBar"></span>
+        </div>
+
+        <div class="stage">
+          <article class="bubble bubble-main">
+            <span class="tag" id="kindTag">Muito curto</span>
+            <h3 id="mainTitle">A linha entra e se encaixa</h3>
+            <p id="mainText">Cada período é uma linha horizontal da tabela periódica.</p>
+          </article>
+
+          <div class="board-shell">
+            <div class="periodic-board" id="board">
+              <div class="loading">Carregando tabela...</div>
+            </div>
+          </div>
+
+          <article class="bubble bubble-side">
+            <div class="burst" id="burst">2 casas</div>
+            <span class="tag" id="focusTag">Camada K</span>
+            <div class="fact-grid">
+              <div class="fact">
+                <span>Sequência</span>
+                <strong id="rangeFact">H e He</strong>
+              </div>
+              <div class="fact">
+                <span>Tipo</span>
+                <strong id="kindFact">Muito curto</strong>
+              </div>
+              <div class="fact">
+                <span>Quantidade</span>
+                <strong id="countFact">2 elementos</strong>
+              </div>
+              <div class="fact">
+                <span>Ideia-chave</span>
+                <strong id="focusFact">Camada K</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="bubble bubble-note">
+            <p id="noteText">O hélio fica nos gases nobres, mas sua configuração termina no bloco s.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="controlbar">
+      <div class="control-group">
+        <button class="primary" id="replayBtn" type="button">Repetir</button>
+        <button id="prevBtn" type="button">Anterior</button>
+        <button id="nextBtn" type="button">Próximo</button>
+        <button id="autoBtn" type="button" aria-pressed="false">Auto</button>
+      </div>
+      <div class="dots" id="dots" aria-label="Selecionar slide"></div>
+      <div class="hint">Use ← → ou Espaço</div>
+    </footer>
+  </div>
+
+  <script>
+    const periodRows = [
+      {period:1, roman:'I', title:'1º período', kind:'Muito curto', count:'Tem 2 elementos', range:'H e He'},
+      {period:2, roman:'II', title:'2º período', kind:'Curto', count:'Tem 8 elementos', range:'Do Li ao Ne'},
+      {period:3, roman:'III', title:'3º período', kind:'Curto', count:'Tem 8 elementos', range:'Do Na ao Ar'},
+      {period:4, roman:'IV', title:'4º período', kind:'Longo', count:'Tem 18 elementos', range:'Do K ao Kr'},
+      {period:5, roman:'V', title:'5º período', kind:'Longo', count:'Tem 18 elementos', range:'Do Rb ao Xe'},
+      {period:6, roman:'VI', title:'6º período', kind:'Superlongo', count:'Tem 32 elementos', range:'Do Cs ao Rn'},
+      {period:7, roman:'VII', title:'7º período', kind:'Incompleto', count:'Tem 25 elementos', range:'Do Fr ao Rg', maxAtomicNumber:111}
+    ];
+
+    const familyRows = [
+      ['Número da coluna', 'Elementos', 'Nome da família'],
+      ['1A (1)', 'Li, Na, K, Rb, Cs, Fr', 'Metais alcalinos (do árabe alcali, "cinza de plantas")'],
+      ['2A (2)', 'Be, Mg, Ca, Sr, Ba, Ra', 'Metais alcalinoterrosos (o termo "terroso" refere-se a "existir na terra")'],
+      ['6A (16)', 'O, S, Se, Te, Po', 'Calcogênios ("formadores de cobre", pois minérios de cobre contêm oxigênio ou enxofre)'],
+      ['7A (17)', 'F, Cl, Br, I, At', 'Halogênios ("formadores de sais")'],
+      ['8A (18)', 'He, Ne, Ar, Kr, Xe, Rn', 'Gases nobres (ou raros)']
+    ];
+
+    const groupLabels = [
+      '1A','2A','3B','4B','5B','6B','7B','8B','8B','8B','1B','2B','3A','4A','5A','6A','7A','8A'
+    ].map((trad, index) => ({trad, iupac:String(index + 1)}));
+
+    const classificationColors = {
+      metal:'#f3d5e2',
+      nonmetal:'#d8eac0',
+      semimetal:'#fff4b8',
+      noble:'#d9edf7',
+      hydrogen:'#ffffff',
+      unknown:'#d7dbe2'
+    };
+
+    const semimetals = new Set(['B','Si','Ge','As','Sb','Te','Po']);
+    const nonmetals = new Set(['C','N','O','F','P','S','Se','Cl','Br','I','At']);
+    const nobleGases = new Set(['He','Ne','Ar','Kr','Xe','Rn']);
+
+    const slides = [
+      {
+        type:'intro',
+        title:'Períodos',
+        kicker:'Ideia central',
+        count:'7 linhas',
+        accent:'#1d4ed8',
+        kind:'Definição',
+        range:'sete linhas horizontais',
+        focus:'períodos',
+        burst:'linhas',
+        mainTitle:'As linhas horizontais',
+        main:'As sete linhas horizontais que aparecem na tabela da página anterior são denominadas períodos.',
+        note:'Podemos notar que:',
+        summary:true
+      },
+      {
+        type:'period',
+        period:1,
+        roman:'I',
+        title:'1º período',
+        kind:'Muito curto',
+        range:'H e He',
+        focus:'período I',
+        count:'Tem 2 elementos',
+        accent:'#1d4ed8',
+        entryX:'-48px',
+        entryY:'-42px',
+        anchors:['H','He'],
+        burst:'2',
+        mainTitle:'1º período (I)',
+        main:'Muito curto. Tem 2 elementos: H e He.',
+        note:'H e He formam o período mais curto da tabela.'
+      },
+      {
+        type:'period',
+        period:2,
+        roman:'II',
+        title:'2º período',
+        kind:'Curto',
+        range:'Do Li ao Ne',
+        focus:'período II',
+        count:'Tem 8 elementos',
+        accent:'#00a6b4',
+        entryX:'-70px',
+        entryY:'0px',
+        anchors:['Li','Ne'],
+        burst:'8',
+        mainTitle:'2º período (II)',
+        main:'Curto. Tem 8 elementos: do Li ao Ne.',
+        note:'Observe a linha inteira chegando ao seu lugar.'
+      },
+      {
+        type:'period',
+        period:3,
+        roman:'III',
+        title:'3º período',
+        kind:'Curto',
+        range:'Do Na ao Ar',
+        focus:'período III',
+        count:'Tem 8 elementos',
+        accent:'#22a06b',
+        entryX:'70px',
+        entryY:'0px',
+        anchors:['Na','Ar'],
+        burst:'8',
+        mainTitle:'3º período (III)',
+        main:'Curto. Tem 8 elementos: do Na ao Ar.',
+        note:'Assim como o 2º período, ele é classificado como curto.'
+      },
+      {
+        type:'period',
+        period:4,
+        roman:'IV',
+        title:'4º período',
+        kind:'Longo',
+        range:'Do K ao Kr',
+        focus:'período IV',
+        count:'Tem 18 elementos',
+        accent:'#45449a',
+        entryX:'0px',
+        entryY:'-70px',
+        anchors:['K','Sc','Kr'],
+        burst:'18',
+        mainTitle:'4º período (IV)',
+        main:'Longo. Tem 18 elementos: do K ao Kr.',
+        note:'A linha fica maior e atravessa o centro da tabela.'
+      },
+      {
+        type:'period',
+        period:5,
+        roman:'V',
+        title:'5º período',
+        kind:'Longo',
+        range:'Do Rb ao Xe',
+        focus:'período V',
+        count:'Tem 18 elementos',
+        accent:'#c88800',
+        entryX:'0px',
+        entryY:'70px',
+        anchors:['Rb','Y','Xe'],
+        burst:'18',
+        mainTitle:'5º período (V)',
+        main:'Longo. Tem 18 elementos: do Rb ao Xe.',
+        note:'O 5º período também é classificado como longo.'
+      },
+      {
+        type:'period',
+        period:6,
+        roman:'VI',
+        title:'6º período',
+        kind:'Superlongo',
+        range:'Do Cs ao Rn',
+        focus:'período VI',
+        count:'Tem 32 elementos',
+        accent:'#a64278',
+        entryX:'-34px',
+        entryY:'82px',
+        anchors:['Cs','La','Lu','Rn'],
+        burst:'32',
+        mainTitle:'6º período (VI)',
+        main:'Superlongo. Tem 32 elementos: do Cs ao Rn.',
+        note:'A série dos lantanídios explica por que essa linha é superlonga.'
+      },
+      {
+        type:'period',
+        period:7,
+        roman:'VII',
+        title:'7º período',
+        kind:'Incompleto',
+        range:'Do Fr ao Rg',
+        focus:'período VII',
+        count:'Tem 25 elementos',
+        accent:'#6e3a86',
+        entryX:'34px',
+        entryY:'82px',
+        anchors:['Fr','Ac','Lr','Rg'],
+        burst:'25',
+        maxAtomicNumber:111,
+        mainTitle:'7º período (VII)',
+        main:'Incompleto. Tem 25 elementos: do Fr ao Rg.',
+        note:'A série dos actinídios aparece na segunda linha fora e abaixo da tabela.'
+      },
+      {
+        type:'note',
+        title:'Lantanídios',
+        kicker:'É importante notar também que:',
+        count:'6º período',
+        kind:'Série dos lantanídios',
+        range:'do lantânio ao lutécio',
+        focus:'terceira casa',
+        accent:'#a64278',
+        highlightRange:[57,71],
+        anchors:['La','Lu'],
+        burst:'15',
+        mainTitle:'No 6º período',
+        main:'A terceira "casa" contém 15 elementos (do lantânio ao lutécio).',
+        note:'Por comodidade, estão indicados numa linha fora e abaixo da tabela; começando com o lantânio, esses elementos formam a chamada série dos lantanídios.'
+      },
+      {
+        type:'note',
+        title:'Actinídios',
+        kicker:'Analogamente:',
+        count:'7º período',
+        kind:'Série dos actinídios',
+        range:'do actínio ao laurêncio',
+        focus:'segunda linha fora',
+        accent:'#6e3a86',
+        highlightRange:[89,103],
+        anchors:['Ac','Lr'],
+        burst:'15',
+        mainTitle:'No 7º período',
+        main:'A terceira "casa" também contém 15 elementos químicos (do actínio ao laurêncio).',
+        note:'Estão indicados na segunda linha fora e abaixo da tabela; começando com o actínio, eles formam a série dos actinídios.'
+      },
+      {
+        type:'note',
+        title:'Naturais e artificiais',
+        kicker:'Na tabela atual:',
+        count:'classificação',
+        kind:'Classificação',
+        range:'existem na natureza',
+        focus:'produzidos em laboratório',
+        accent:'#81798f',
+        highlightSymbols:['Tc','Pm','At','U'],
+        anchors:['Tc','Pm','At','U'],
+        burst:'N/A',
+        mainTitle:'Elementos naturais e artificiais',
+        main:'Na tabela atual, existem elementos naturais e elementos artificiais.',
+        note:'Naturais são os que existem na natureza; ao contrário, os artificiais devem ser produzidos em laboratórios especializados.'
+      },
+      {
+        type:'note',
+        title:'Cisurânicos e transurânicos',
+        kicker:'Elementos artificiais:',
+        count:'Tc, Pm e At',
+        kind:'Cisurânicos',
+        range:'antes do urânio',
+        focus:'depois do urânio',
+        accent:'#0b0b33',
+        highlightSymbols:['Tc','Pm','At','U'],
+        anchors:['Tc','Pm','At','U'],
+        burst:'U-92',
+        mainTitle:'Antes do urânio',
+        main:'Dos artificiais, três estão situados, na Tabela Periódica, antes do urânio (U-92) e, por isso, são chamados de elementos cisurânicos:',
+        note:'O tecnécio (Tc-43), o promécio (Pm-61) e o astato (At-85). Os outros artificiais vêm depois do urânio e são chamados de transurânicos.'
+      },
+      {
+        type:'columns',
+        title:'Colunas',
+        kicker:'Agora, na vertical',
+        count:'18 colunas',
+        kind:'Definição',
+        range:'linhas verticais',
+        focus:'propriedades semelhantes',
+        accent:'#1d4ed8',
+        boardMode:'groups',
+        groups:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+        maxAtomicNumber:112,
+        burst:'18',
+        mainTitle:'Colunas, grupos ou famílias',
+        main:'As dezoito linhas verticais que aparecem na tabela são denominadas colunas, grupos ou famílias de elementos.',
+        note:'As colunas têm importância especial para a Química, pois cada coluna é formada por elementos com propriedades químicas semelhantes.',
+        facts:[
+          ['Nome', 'colunas, grupos ou famílias'],
+          ['Direção', 'linhas verticais'],
+          ['Total', 'dezoito linhas'],
+          ['Ideia-chave', 'propriedades químicas semelhantes']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Numeração das colunas',
+        kicker:'Duas formas de ler',
+        count:'1A...8A / 1...18',
+        kind:'Tradicional e IUPAC',
+        range:'1A, 2A, 3B, 4B...',
+        focus:'1, 2, 3, 4, 5...',
+        accent:'#2563eb',
+        boardMode:'groups',
+        groups:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+        maxAtomicNumber:112,
+        burst:'azul',
+        mainTitle:'A numeração tradicional',
+        main:'A numeração tradicional das dezoito colunas é 1A, 2A, 3B, 4B etc.',
+        note:'Atualmente, a IUPAC recomenda a numeração corrida 1, 2, 3, 4, 5..., indicada em azul na tabela.',
+        facts:[
+          ['Tradicional', '1A, 2A, 3B, 4B etc.'],
+          ['IUPAC', '1, 2, 3, 4, 5...'],
+          ['Na tabela', 'o número atual aparece em azul'],
+          ['Próximo passo', 'algumas famílias têm nomes especiais']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Famílias especiais',
+        kicker:'Nomes que aparecem muito',
+        count:'5 famílias',
+        kind:'Tabela-resumo',
+        range:'1A, 2A, 6A, 7A e 8A',
+        focus:'nomes especiais',
+        accent:'#d08a00',
+        familyTable:true,
+        burst:'5',
+        mainTitle:'Algumas famílias têm nomes próprios',
+        main:'Devemos assinalar que algumas famílias têm nomes especiais.',
+        note:'A tabela mostra o número da coluna, os elementos e o nome da família.',
+        facts:[
+          ['1A (1)', 'metais alcalinos'],
+          ['2A (2)', 'metais alcalinoterrosos'],
+          ['6A (16)', 'calcogênios'],
+          ['7A (17)', 'halogênios'],
+          ['8A (18)', 'gases nobres ou raros']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Hidrogênio',
+        kicker:'Atenção na 1A',
+        count:'H-1',
+        kind:'Não é alcalino',
+        range:'aparece na coluna 1A',
+        focus:'H fora',
+        accent:'#a43b36',
+        boardMode:'groups',
+        groups:[1],
+        highlightSymbols:['H','Li','Na','K','Rb','Cs','Fr'],
+        anchors:['H'],
+        burst:'H',
+        mainTitle:'O H não acompanha a família',
+        main:'O hidrogênio (H-1), embora apareça na coluna 1A, não é um metal alcalino.',
+        note:'Ele é tão diferente dos demais elementos químicos que, em algumas classificações, prefere-se colocá-lo fora da Tabela Periódica.',
+        facts:[
+          ['Posição', 'coluna 1A'],
+          ['Cuidado', 'não é metal alcalino'],
+          ['Motivo', 'propriedades muito específicas'],
+          ['Classificação', 'pode ficar fora da Tabela Periódica']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Metal terroso',
+        kicker:'Coluna 3A',
+        count:'Al-13',
+        kind:'Designação frequente',
+        range:'Al, Ga, In, Tl',
+        focus:'terra e barro comum',
+        accent:'#c8952b',
+        boardMode:'groups',
+        groups:[13],
+        highlightSymbols:['Al','Ga','In','Tl'],
+        anchors:['Al'],
+        burst:'Al',
+        mainTitle:'Alumínio',
+        main:'O alumínio (Al-13) é chamado frequentemente de metal terroso, pois é um constituinte encontrado na terra e no barro comum.',
+        note:'Essa designação se estende, às vezes, aos demais elementos da coluna 3A: Ga, In e Tl.',
+        facts:[
+          ['Elemento', 'alumínio (Al-13)'],
+          ['Nome comum', 'metal terroso'],
+          ['Origem', 'terra e barro comum'],
+          ['Extensão', 'às vezes: Ga, In e Tl']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Grupo do nitrogênio',
+        kicker:'Quando não há nome especial',
+        count:'5A (15)',
+        kind:'Primeiro elemento',
+        range:'N, P, As, Sb, Bi',
+        focus:'família do nitrogênio',
+        accent:'#5e3b91',
+        boardMode:'groups',
+        groups:[15],
+        highlightSymbols:['N','P','As','Sb','Bi'],
+        anchors:['N'],
+        burst:'N',
+        mainTitle:'Famílias sem nome especial',
+        main:'Quando a família não tem nome especial, é costume chamá-la pelo nome do primeiro elemento que nela aparece.',
+        note:'Por exemplo, os elementos da coluna 5A são chamados de elementos da família, ou do grupo, do nitrogênio.',
+        facts:[
+          ['Regra', 'usar o primeiro elemento'],
+          ['Exemplo', 'coluna 5A'],
+          ['Nome', 'família do nitrogênio'],
+          ['Grupo atual', '15']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Elementos representativos',
+        kicker:'Colunas A',
+        count:'A = principais',
+        kind:'Típicos',
+        range:'1A, 2A e 3A a 8A',
+        focus:'semelhança máxima',
+        accent:'#22a06b',
+        boardMode:'groups',
+        groups:[1,2,13,14,15,16,17,18],
+        mapColor:'#d8eac0',
+        maxAtomicNumber:112,
+        burst:'A',
+        mainTitle:'As colunas A',
+        main:'As colunas A são as mais importantes da tabela.',
+        note:'Seus elementos são denominados elementos típicos, característicos ou representativos. Em cada coluna A, a semelhança de propriedades químicas entre os elementos é máxima.',
+        facts:[
+          ['Também chamados', 'típicos, característicos ou representativos'],
+          ['Colunas', '1A, 2A e 3A a 8A'],
+          ['Importância', 'as mais importantes da tabela'],
+          ['Semelhança', 'máxima em cada coluna A']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Elementos de transição',
+        kicker:'Centro da tabela',
+        count:'3B a 2B',
+        kind:'Transição',
+        range:'3B, 4B, 5B, 6B, 7B, 8B, 1B e 2B',
+        focus:'8B é tripla',
+        accent:'#45449a',
+        boardMode:'groups',
+        groups:[3,4,5,6,7,8,9,10,11,12],
+        mapColor:'#f3d5e2',
+        maxAtomicNumber:112,
+        burst:'B',
+        mainTitle:'Colunas B',
+        main:'Os elementos das colunas 3B, 4B, 5B, 6B, 7B, 8B, 1B e 2B constituem os chamados elementos de transição.',
+        note:'Note que, em particular, a coluna 8B é uma coluna tripla.',
+        facts:[
+          ['Faixa', '3B, 4B, 5B, 6B, 7B, 8B, 1B e 2B'],
+          ['Nome', 'elementos de transição'],
+          ['Posição', 'centro da tabela'],
+          ['Detalhe', 'a coluna 8B é tripla']
+        ]
+      },
+      {
+        type:'columns',
+        title:'Transição interna',
+        kicker:'Abaixo da tabela',
+        count:'15 + 15',
+        kind:'Duas séries',
+        range:'penúltima e última casa da 3B',
+        focus:'agrupados embaixo',
+        accent:'#a64278',
+        boardMode:'groups',
+        highlightRanges:[[57,71],[89,103]],
+        anchors:['La','Lu','Ac','Lr'],
+        mapColor:'#f3d5e2',
+        burst:'30',
+        mainTitle:'Duas séries ligadas à 3B',
+        main:'Na penúltima "casa" da coluna 3B ficam os quinze elementos da série dos lantanídios; na última "casa", outros quinze formam a série dos actinídios.',
+        note:'Em conjunto, são elementos de transição interna. Devido à semelhança de suas propriedades, são agrupados embaixo da tabela.',
+        facts:[
+          ['Lantanídios', '15 elementos'],
+          ['Actinídios', '15 elementos'],
+          ['Conjunto', 'transição interna'],
+          ['Organização', 'agrupados embaixo da tabela']
+        ]
+      },
+      {
+        type:'classification',
+        title:'Outra separação',
+        kicker:'Classificação periódica',
+        count:'4 grupos',
+        kind:'4 categorias',
+        range:'metais e não metais',
+        focus:'cores por tipo',
+        accent:'#d08a00',
+        boardMode:'classification',
+        classificationFocus:['metal','nonmetal','semimetal','noble','hydrogen'],
+        maxAtomicNumber:112,
+        burst:'cores',
+        mainTitle:'Separação por tipo de elemento',
+        main:'Outra separação importante divide os elementos em metais, não metais (ou ametais), semimetais e gases nobres.',
+        note:'No mapa: metais em rosa, não metais em verde, semimetais em amarelo e gases nobres em azul. O hidrogênio fica destacado à parte.',
+        facts:[
+          ['Rosa', 'metais'],
+          ['Verde', 'não metais ou ametais'],
+          ['Amarelo', 'semimetais'],
+          ['Azul', 'gases nobres']
+        ]
+      },
+      {
+        type:'classification',
+        title:'Metais',
+        kicker:'Maioria da tabela',
+        count:'87 metais',
+        kind:'Propriedades gerais',
+        range:'sólidos a 25 °C',
+        focus:'formam cátions',
+        accent:'#b84c7d',
+        boardMode:'classification',
+        classificationFocus:['metal'],
+        maxAtomicNumber:112,
+        burst:'87',
+        mainTitle:'Características dos metais',
+        main:'Os metais são elementos sólidos à temperatura ambiente (25 °C), exceto o mercúrio.',
+        note:'Em geral são duros, densos, têm brilho metálico, pontos de fusão e ebulição altos, conduzem calor e eletricidade, são maleáveis, dúcteis e formam cátions.',
+        facts:[
+          ['Estado', 'sólidos a 25 °C, exceto Hg'],
+          ['Aspecto', 'duros, densos e com brilho metálico'],
+          ['Pontos e condução', 'fusão/ebulição altos; calor e eletricidade'],
+          ['Forma e íons', 'maleáveis (lâminas), dúcteis (fios) e cátions']
+        ]
+      },
+      {
+        type:'classification',
+        title:'Ametais, semimetais e nobres',
+        kicker:'Os outros comportamentos',
+        count:'11 + 7 + 6',
+        kind:'Três grupos',
+        range:'propriedades opostas ou intermediárias',
+        focus:'gases nobres',
+        accent:'#6a8f28',
+        boardMode:'classification',
+        classificationFocus:['nonmetal','semimetal','noble'],
+        maxAtomicNumber:112,
+        burst:'24',
+        mainTitle:'Três leituras rápidas',
+        main:'Os não metais têm geralmente propriedades opostas às dos metais. Os semimetais têm propriedades intermediárias entre os metais e os não metais.',
+        note:'Os gases nobres, ou gases raros, têm comportamento químico específico.',
+        facts:[
+          ['Não metais', 'propriedades opostas às dos metais'],
+          ['Semimetais', 'propriedades intermediárias'],
+          ['Gases nobres', 'comportamento químico específico'],
+          ['Quantidade', '11, 7 e 6 elementos']
+        ]
+      },
+      {
+        type:'classification',
+        title:'Comparando as quantidades',
+        kicker:'Tabela com 112 elementos',
+        count:'87 > 11 + 7 + 6',
+        kind:'Metais predominam',
+        range:'112 elementos considerados',
+        focus:'hidrogênio fora',
+        accent:'#0b0b33',
+        boardMode:'classification',
+        classificationFocus:['metal','nonmetal','semimetal','noble','hydrogen'],
+        maxAtomicNumber:112,
+        anchors:['H'],
+        burst:'112',
+        mainTitle:'A tabela é majoritariamente metálica',
+        main:'Dos 112 elementos considerados, os metais são maioria.',
+        note:'O número de metais (87) supera bastante o de não metais (11), semimetais (7) e gases nobres (6). O hidrogênio, por suas propriedades específicas, fica fora dessa classificação.',
+        facts:[
+          ['Metais', '87'],
+          ['Não metais', '11'],
+          ['Semimetais', '7'],
+          ['Gases nobres', '6'],
+          ['Hidrogênio', 'fora da classificação']
+        ]
+      }
+    ];
+
+    const colors = {
+      alkali:'#a43b36',
+      alkaline:'#c8952b',
+      transition:'#45449a',
+      postTransition:'#81798f',
+      metalloid:'#3e854c',
+      polyNonmetal:'#5e3b91',
+      diatomicNonmetal:'#97641f',
+      nobleGas:'#1f5726',
+      lanthanide:'#a64278',
+      actinide:'#6e3a86',
+      unknown:'#0b0b33'
+    };
+
+    const state = {
+      index:0,
+      elements:[],
+      playing:false,
+      timer:0
+    };
+
+    const board = document.getElementById('board');
+    const deck = document.getElementById('deck');
+    const progressBar = document.getElementById('progressBar');
+    const autoBtn = document.getElementById('autoBtn');
+
+    function escapeHtml(value){
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+      }[char]));
+    }
+
+    function visualCategory(el){
+      if(el.n >= 109) return 'unknown';
+      if(el.n >= 89 && el.n <= 103) return 'actinide';
+      if(el.n >= 57 && el.n <= 71) return 'lanthanide';
+      if(['H','N','O','F','Cl','Br','I'].includes(el.s)) return 'diatomicNonmetal';
+      if(['C','P','S','Se'].includes(el.s)) return 'polyNonmetal';
+      if(['He','Ne','Ar','Kr','Xe','Rn'].includes(el.s)) return 'nobleGas';
+      if(['B','Si','Ge','As','Sb','Te','At'].includes(el.s)) return 'metalloid';
+      if(['Al','Ga','In','Sn','Tl','Pb','Bi','Po'].includes(el.s)) return 'postTransition';
+      if(el.familyKey === 'g1') return 'alkali';
+      if(el.familyKey === 'g2') return 'alkaline';
+      if(el.block === 'd') return 'transition';
+      return 'postTransition';
+    }
+
+    function classificationKey(el){
+      if(el.s === 'H') return 'hydrogen';
+      if(nobleGases.has(el.s)) return 'noble';
+      if(semimetals.has(el.s)) return 'semimetal';
+      if(nonmetals.has(el.s)) return 'nonmetal';
+      if(el.n <= 112) return 'metal';
+      return 'unknown';
+    }
+
+    function elementAllowed(el, slide){
+      return !slide.maxAtomicNumber || el.n <= slide.maxAtomicNumber;
+    }
+
+    function tileColorFor(el, slide, isActive){
+      if(slide.boardMode === 'classification'){
+        return classificationColors[classificationKey(el)] || classificationColors.unknown;
+      }
+      if(isActive && slide.mapColor) return slide.mapColor;
+      return colors[visualCategory(el)] || '#64748b';
+    }
+
+    function rowLabel(row){
+      if(row === 8) return 'Ln';
+      if(row === 9) return 'An';
+      return String(row);
+    }
+
+    function rowTitle(row){
+      if(row === 8) return 'Lantanídeos';
+      if(row === 9) return 'Actinídeos';
+      return `${row}º período`;
+    }
+
+    function rowActive(row, period){
+      return row === period || (period === 6 && row === 8) || (period === 7 && row === 9);
+    }
+
+    function parseElements(jsText){
+      const match = jsText.match(/const fullElementData = `([\s\S]*?)`;/);
+      if(!match) throw new Error('Base de elementos não encontrada.');
+      return match[1].trim().split('\n').map(row => {
+        const [nRaw, s, name, periodRaw, colRaw, rowRaw, block, classification, familyKey] = row.split('|');
+        return {
+          n:Number(nRaw),
+          s,
+          name,
+          period:Number(periodRaw),
+          col:Number(colRaw),
+          row:Number(rowRaw),
+          block,
+          classification,
+          familyKey
+        };
+      });
+    }
+
+    async function loadElements(){
+      try{
+        const response = await fetch('tabela_periodica_interativa_sp_clean.js', {cache:'no-cache'});
+        if(!response.ok) throw new Error('Não foi possível carregar a base da tabela.');
+        state.elements = parseElements(await response.text());
+        render();
+      }catch(error){
+        board.innerHTML = `<div class="loading">${escapeHtml(error.message)} Rode por um servidor HTTP local.</div>`;
+      }
+    }
+
+    function fitBoard(){
+      const shell = document.querySelector('.board-shell');
+      if(!shell) return;
+      const rect = shell.getBoundingClientRect();
+      const gap = window.innerWidth < 620 ? 2 : 4;
+      const byWidth = Math.floor((rect.width - 22 - gap * 18) / 18.72);
+      const isGroup = board.classList.contains('group-mode');
+      const rowUnits = isGroup ? 9.56 : 9;
+      const rowGaps = isGroup ? 9 : 8;
+      const byHeight = Math.floor((rect.height - gap * rowGaps) / rowUnits);
+      const max = window.innerWidth < 620 ? 27 : 58;
+      const min = window.innerWidth < 620 ? (isGroup ? 14 : 16) : 20;
+      const tile = Math.max(min, Math.min(max, byWidth, byHeight));
+      document.documentElement.style.setProperty('--tile', `${tile}px`);
+    }
+
+    function activeElements(slide){
+      if(slide.highlightRanges){
+        return state.elements
+          .filter(el => slide.highlightRanges.some(([start, end]) => el.n >= start && el.n <= end))
+          .sort((a,b) => a.n - b.n);
+      }
+      if(slide.highlightRange){
+        const [start, end] = slide.highlightRange;
+        return state.elements
+          .filter(el => el.n >= start && el.n <= end)
+          .sort((a,b) => a.n - b.n);
+      }
+      if(slide.highlightSymbols){
+        const symbols = new Set(slide.highlightSymbols);
+        return state.elements
+          .filter(el => symbols.has(el.s))
+          .sort((a,b) => a.n - b.n);
+      }
+      if(slide.classificationFocus){
+        const keys = new Set(slide.classificationFocus);
+        return state.elements
+          .filter(el => elementAllowed(el, slide) && keys.has(classificationKey(el)))
+          .sort((a,b) => a.n - b.n);
+      }
+      if(slide.groups){
+        const groups = new Set(slide.groups);
+        return state.elements
+          .filter(el => elementAllowed(el, slide) && groups.has(el.col))
+          .sort((a,b) => a.n - b.n);
+      }
+      if(!slide.period) return [];
+      return state.elements
+        .filter(el => el.period === slide.period && elementAllowed(el, slide))
+        .sort((a,b) => a.n - b.n);
+    }
+
+    function renderFamilyTable(){
+      board.className = 'periodic-board family-table-mode';
+      board.innerHTML = familyRows.map((row, rowIndex) => {
+        const isHeader = rowIndex === 0;
+        const alt = rowIndex > 0 && rowIndex % 2 === 0 ? ' alt' : '';
+        return row.map((value, colIndex) => `
+          <div
+            class="family-table-cell${isHeader ? ' header' : alt}${colIndex === 2 ? ' wide' : ''}"
+            style="--summary-delay:${180 + (rowIndex * 96) + (colIndex * 32)}ms"
+          >${escapeHtml(value)}</div>
+        `).join('');
+      }).join('');
+    }
+
+    function renderGroupBoard(slide){
+      board.className = 'periodic-board group-mode';
+      const active = activeElements(slide);
+      const activeSymbols = new Set(active.map(el => el.s));
+      const activeOrder = new Map(active.map((el, index) => [el.s, index]));
+      const anchors = new Set(slide.anchors || []);
+
+      const labels = groupLabels.map((label, index) => `
+        <div
+          class="group-label"
+          style="grid-column:${index + 2};grid-row:1;--summary-delay:${160 + (index * 24)}ms"
+          title="${escapeHtml(`Coluna ${label.trad}; IUPAC ${label.iupac}`)}"
+        ><span>${escapeHtml(label.trad)}</span><span class="iupac">${escapeHtml(label.iupac)}</span></div>
+      `).join('');
+
+      const rows = Array.from({length:9}, (_, index) => index + 1).map(row => `
+        <div
+          class="row-label"
+          style="grid-column:1;grid-row:${row + 1}"
+          title="${escapeHtml(rowTitle(row))}"
+        >${rowLabel(row)}</div>
+      `).join('');
+
+      const cells = state.elements
+        .filter(el => elementAllowed(el, slide))
+        .map(el => {
+          const isActive = activeSymbols.has(el.s);
+          const order = activeOrder.get(el.s) || 0;
+          const color = tileColorFor(el, slide, isActive);
+          const key = classificationKey(el);
+          return `
+            <div
+              class="mini-element map-tile ${isActive ? 'active' : 'dimmed'} ${anchors.has(el.s) ? 'anchor' : ''} ${key === 'hydrogen' && slide.boardMode === 'classification' ? 'hydrogen-out' : ''}"
+              style="grid-column:${el.col + 1};grid-row:${el.row + 1};--tile-color:${color};--entry-x:${slide.entryX || '0px'};--entry-y:${slide.entryY || '-56px'};--delay:${Math.min(order * 18, 1080)}ms"
+              title="${escapeHtml(`${el.name} (${el.s})`)}"
+            >${escapeHtml(el.s)}</div>
+          `;
+        }).join('');
+
+      board.innerHTML = labels + rows + cells;
+      fitBoard();
+    }
+
+    function renderBoard(slide){
+      if(slide.summary){
+        board.className = 'periodic-board summary-mode';
+        board.innerHTML = periodRows.map((row, rowIndex) => {
+          const alt = rowIndex === 1 || rowIndex === 2 || rowIndex === 5 || rowIndex === 6 ? ' alt' : '';
+          const cells = [
+            [`${row.title} (${row.roman})`, 'Período'],
+            [row.kind, 'Tipo'],
+            [row.count, 'Quantidade'],
+            [row.range, 'Sequência']
+          ];
+          return cells.map(([value, label], colIndex) => `
+            <div
+              class="summary-cell${alt}"
+              data-label="${label}"
+              style="--summary-delay:${220 + (rowIndex * 92) + (colIndex * 32)}ms"
+            >${escapeHtml(value)}</div>
+          `).join('');
+        }).join('');
+        return;
+      }
+
+      if(slide.familyTable){
+        renderFamilyTable();
+        return;
+      }
+
+      if(slide.boardMode === 'groups' || slide.boardMode === 'classification'){
+        renderGroupBoard(slide);
+        return;
+      }
+
+      board.className = 'periodic-board';
+      const active = activeElements(slide);
+      const activeSymbols = new Set(active.map(el => el.s));
+      const activeOrder = new Map(active.map((el, index) => [el.s, index]));
+      const anchors = new Set(slide.anchors || []);
+
+      const labels = Array.from({length:9}, (_, index) => index + 1).map(row => `
+        <div
+          class="row-label ${rowActive(row, slide.period) ? 'active' : ''}"
+          style="grid-column:1;grid-row:${row}"
+          title="${escapeHtml(rowTitle(row))}"
+        >${rowLabel(row)}</div>
+      `).join('');
+
+      const cells = state.elements.map(el => {
+        const isActive = activeSymbols.has(el.s);
+        const order = activeOrder.get(el.s) || 0;
+        const color = colors[visualCategory(el)] || '#64748b';
+        return `
+          <div
+            class="mini-element ${isActive ? 'active' : ''} ${anchors.has(el.s) ? 'anchor' : ''}"
+            style="grid-column:${el.col + 1};grid-row:${el.row};--tile-color:${color};--entry-x:${slide.entryX || '0px'};--entry-y:${slide.entryY || '-56px'};--delay:${Math.min(order * 38, 1080)}ms"
+            title="${escapeHtml(`${el.name} (${el.s})`)}"
+          >${escapeHtml(el.s)}</div>
+        `;
+      }).join('');
+
+      board.innerHTML = labels + cells;
+      fitBoard();
+    }
+
+    function renderDots(){
+      document.getElementById('dots').innerHTML = slides.map((slide, index) => `
+        <button
+          type="button"
+          class="dot ${index === state.index ? 'active' : ''}"
+          data-slide="${index}"
+          aria-label="${escapeHtml(slide.title)}"
+        >${index + 1}</button>
+      `).join('');
+      document.querySelectorAll('[data-slide]').forEach(button => {
+        button.onclick = () => {
+          stopAuto();
+          state.index = Number(button.dataset.slide);
+          render();
+        };
+      });
+    }
+
+    function renderFacts(slide){
+      const facts = slide.facts || [
+        ['Sequência', slide.range],
+        ['Tipo', slide.kind],
+        ['Quantidade', slide.count],
+        ['Ideia-chave', slide.focus]
+      ];
+
+      document.querySelector('.fact-grid').innerHTML = facts.map(([label, value]) => `
+        <div class="fact">
+          <span>${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
+        </div>
+      `).join('');
+    }
+
+    function render(){
+      if(!state.elements.length) return;
+      const slide = slides[state.index];
+      deck.classList.remove('animating');
+      deck.style.setProperty('--accent', slide.accent);
+      deck.dataset.type = slide.type || 'period';
+      document.getElementById('counter').textContent = `${state.index + 1}/${slides.length}`;
+      document.getElementById('slideKicker').textContent = slide.kicker || `Período ${slide.period}`;
+      document.getElementById('slideTitle').textContent = slide.roman ? `${slide.title} (${slide.roman})` : slide.title;
+      document.getElementById('slideCount').textContent = slide.count;
+      document.getElementById('kindTag').textContent = slide.kind;
+      document.getElementById('mainTitle').textContent = slide.mainTitle;
+      document.getElementById('mainText').textContent = slide.main;
+      document.getElementById('burst').textContent = slide.burst;
+      document.getElementById('focusTag').textContent = slide.focus;
+      document.getElementById('noteText').textContent = slide.note;
+      renderFacts(slide);
+      progressBar.style.width = `${((state.index + 1) / slides.length) * 100}%`;
+      autoBtn.textContent = state.playing ? 'Pausar' : 'Auto';
+      autoBtn.setAttribute('aria-pressed', String(state.playing));
+      renderBoard(slide);
+      renderDots();
+      void deck.offsetWidth;
+      deck.classList.add('animating');
+    }
+
+    function move(delta){
+      state.index = (state.index + delta + slides.length) % slides.length;
+      render();
+    }
+
+    function replay(){
+      render();
+    }
+
+    function stopAuto(){
+      state.playing = false;
+      clearTimeout(state.timer);
+      render();
+    }
+
+    function scheduleAuto(){
+      clearTimeout(state.timer);
+      if(!state.playing) return;
+      state.timer = setTimeout(() => {
+        if(state.index >= slides.length - 1){
+          state.playing = false;
+          render();
+          return;
+        }
+        state.index += 1;
+        render();
+        scheduleAuto();
+      }, 7600);
+    }
+
+    function toggleAuto(){
+      if(state.playing){
+        stopAuto();
+        return;
+      }
+      if(state.index >= slides.length - 1) state.index = 0;
+      state.playing = true;
+      render();
+      scheduleAuto();
+    }
+
+    document.getElementById('replayBtn').onclick = replay;
+    document.getElementById('prevBtn').onclick = () => {
+      stopAuto();
+      move(-1);
+    };
+    document.getElementById('nextBtn').onclick = () => {
+      stopAuto();
+      move(1);
+    };
+    autoBtn.onclick = toggleAuto;
+
+    window.addEventListener('keydown', event => {
+      if(event.key === 'ArrowRight'){
+        stopAuto();
+        move(1);
+      }
+      if(event.key === 'ArrowLeft'){
+        stopAuto();
+        move(-1);
+      }
+      if(event.key === ' '){
+        event.preventDefault();
+        toggleAuto();
+      }
+    });
+
+    let resizeFrame = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(() => {
+        fitBoard();
+      });
+    });
+
+    loadElements();
+  </script>
+</body>
+</html>

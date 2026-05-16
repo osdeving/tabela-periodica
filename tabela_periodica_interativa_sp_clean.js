@@ -454,6 +454,108 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       1:'IA',2:'IIA',3:'IIIB',4:'IVB',5:'VB',6:'VIB',7:'VIIB',8:'VIIIB',9:'VIIIB',10:'VIIIB',11:'IB',12:'IIB',13:'IIIA',14:'IVA',15:'VA',16:'VIA',17:'VIIA',18:'VIIIA'
     };
     const shellLabels = {1:'K',2:'L',3:'M',4:'N',5:'O',6:'P',7:'Q',8:'Lant.',9:'Act.'};
+    const periodLessonSteps = [
+      {
+        period:1,
+        roman:'I',
+        title:'1º período',
+        kind:'Muito curto',
+        range:'H e He',
+        focus:'Camada K',
+        accent:'#1d4ed8',
+        entryX:'-58px',
+        entryY:'-28px',
+        anchorSymbols:['H','He'],
+        message:'A primeira linha só usa a camada K. Ela começa no hidrogênio e já fecha no hélio, por isso o período tem apenas duas casas.',
+        secondary:'Mesmo o hélio ficando na família dos gases nobres, sua configuração eletrônica termina no bloco s.'
+      },
+      {
+        period:2,
+        roman:'II',
+        title:'2º período',
+        kind:'Curto',
+        range:'Do Li ao Ne',
+        focus:'Blocos s e p',
+        accent:'#00a6b4',
+        entryX:'-70px',
+        entryY:'-12px',
+        anchorSymbols:['Li','Ne'],
+        message:'A segunda linha abre a camada L. A leitura fica bem limpa: duas casas do bloco s à esquerda e seis casas do bloco p à direita.',
+        secondary:'Aqui aparecem referências fortes de memorização, como C, N, O, F e Ne.'
+      },
+      {
+        period:3,
+        roman:'III',
+        title:'3º período',
+        kind:'Curto',
+        range:'Do Na ao Ar',
+        focus:'Blocos s e p',
+        accent:'#22a06b',
+        entryX:'-70px',
+        entryY:'4px',
+        anchorSymbols:['Na','Ar'],
+        message:'O terceiro período repete o desenho curto: Na e Mg ocupam o bloco s, depois Al até Ar completam o bloco p.',
+        secondary:'Ele ajuda a fixar a sequência escolar clássica dos elementos mais cobrados no início do curso.'
+      },
+      {
+        period:4,
+        roman:'IV',
+        title:'4º período',
+        kind:'Longo',
+        range:'Do K ao Kr',
+        focus:'Bloco d entra no meio',
+        accent:'#45449a',
+        entryX:'0px',
+        entryY:'-64px',
+        anchorSymbols:['K','Sc','Kr'],
+        message:'No quarto período, os metais de transição passam a ocupar o centro da tabela. Por isso a linha cresce para 18 elementos.',
+        secondary:'A ordem visual fica s, depois d, depois p: K e Ca, Sc até Zn, Ga até Kr.'
+      },
+      {
+        period:5,
+        roman:'V',
+        title:'5º período',
+        kind:'Longo',
+        range:'Do Rb ao Xe',
+        focus:'18 elementos',
+        accent:'#c88800',
+        entryX:'0px',
+        entryY:'-64px',
+        anchorSymbols:['Rb','Y','Xe'],
+        message:'O quinto período mantém a estrutura longa. O bloco d novamente ocupa o miolo e liga os elementos do bloco s aos do bloco p.',
+        secondary:'Essa repetição torna os períodos 4 e 5 bons para reconhecer o padrão dos metais de transição.'
+      },
+      {
+        period:6,
+        roman:'VI',
+        title:'6º período',
+        kind:'Superlongo',
+        range:'Do Cs ao Rn',
+        focus:'Lantanídeos',
+        accent:'#a64278',
+        entryX:'-18px',
+        entryY:'72px',
+        anchorSymbols:['Cs','La','Lu','Rn'],
+        message:'O sexto período tem 32 elementos. A série dos lantanídeos pertence a essa linha, mas é desenhada abaixo para a tabela caber melhor na tela.',
+        secondary:'A sequência La a Lu aparece deslocada abaixo do corpo principal; depois a linha segue por Hf até Rn.'
+      },
+      {
+        period:7,
+        roman:'VII',
+        title:'7º período',
+        kind:'Incompleto',
+        range:'Do Fr ao Rg',
+        focus:'Actinídeos',
+        accent:'#6e3a86',
+        entryX:'18px',
+        entryY:'76px',
+        maxAtomicNumber:111,
+        anchorSymbols:['Fr','Ac','Lr','Rg'],
+        message:'O sétimo período é tratado aqui como incompleto: tem 25 elementos, do Fr ao Rg.',
+        secondary:'A série dos actinídios aparece na segunda linha fora e abaixo da tabela; começando com o actínio, eles formam a série dos actinídios.'
+      }
+    ];
+    const periodLessonAutoDelay = 4600;
     const dockLayout = {
       minWidth:1140,
       preview:{column:4, span:4, row:2, rowSpan:3},
@@ -491,6 +593,9 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
     const tableWrap = document.querySelector('#tab-explorer .table-wrap');
     const quizWrap = document.querySelector('.quiz-wrap');
     const tablePreviewMobile = document.getElementById('tablePreviewMobile');
+    let periodLessonIndex = 0;
+    let periodLessonPlaying = false;
+    let periodLessonTimer = 0;
 
     function getCss(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
@@ -1417,6 +1522,166 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       });
     }
 
+    function periodLessonStep(){
+      return periodLessonSteps[periodLessonIndex] || periodLessonSteps[0];
+    }
+
+    function periodLessonElements(step){
+      return allElements
+        .filter(el => el.period === step.period && (!step.maxAtomicNumber || el.n <= step.maxAtomicNumber))
+        .sort((a,b) => a.n - b.n);
+    }
+
+    function periodLessonCount(step){
+      const count = periodLessonElements(step).length;
+      return `${count} elementos`;
+    }
+
+    function periodLessonRowLabel(row){
+      if(row === 8) return 'Ln';
+      if(row === 9) return 'An';
+      return String(row);
+    }
+
+    function periodLessonRowActive(row, period){
+      return row === period || (period === 6 && row === 8) || (period === 7 && row === 9);
+    }
+
+    function renderPeriodLesson(){
+      const root = document.getElementById('periodLesson');
+      const table = document.getElementById('periodBuildTable');
+      const narrative = document.getElementById('periodNarrative');
+      const dots = document.getElementById('periodDots');
+      if(!root || !table || !narrative || !dots) return;
+
+      const step = periodLessonStep();
+      const activeElements = periodLessonElements(step);
+      const activeOrder = new Map(activeElements.map((el, index) => [el.s, index]));
+      const anchors = new Set(step.anchorSymbols || []);
+      const activeSymbols = new Set(activeElements.map(el => el.s));
+      const countText = periodLessonCount(step);
+
+      root.style.setProperty('--period-accent', step.accent);
+      document.getElementById('periodProgressBar').style.width = `${((periodLessonIndex + 1) / periodLessonSteps.length) * 100}%`;
+      document.getElementById('periodStageKicker').textContent = `Período ${step.period}`;
+      document.getElementById('periodStageTitle').textContent = `${step.title} (${step.roman})`;
+      document.getElementById('periodStageCount').textContent = countText;
+
+      const rowLabels = fullRowOrder.map(row => `
+        <div
+          class="period-row-label ${periodLessonRowActive(row, step.period) ? 'active' : ''}"
+          style="grid-column:1;grid-row:${row}"
+          title="${row === 8 ? 'Lantanídeos' : row === 9 ? 'Actinídeos' : `${row}º período`}"
+        >${periodLessonRowLabel(row)}</div>
+      `).join('');
+
+      const tiles = allElements.map(el => {
+        const isActive = activeSymbols.has(el.s);
+        const isInScope = !step.maxAtomicNumber || el.n <= step.maxAtomicNumber;
+        const order = activeOrder.get(el.s) || 0;
+        const color = categoryMeta[visualCategory(el)]?.color || electronMeta[el.block].color;
+        const title = `${el.name} (${el.s}) - período ${el.period}, grupo ${el.group}`;
+        return `
+          <button
+            type="button"
+            class="period-mini-el ${isActive ? 'active' : ''} ${!isInScope ? 'out-of-scope' : ''} ${anchors.has(el.s) ? 'anchor' : ''}"
+            style="grid-column:${el.col + 1};grid-row:${el.row};--mini-color:${color};--entry-x:${step.entryX};--entry-y:${step.entryY};--delay:${Math.min(order * 42, 1280)}ms"
+            data-period-symbol="${el.s}"
+            aria-label="${escapeHtml(title)}"
+            title="${escapeHtml(title)}"
+          >${escapeHtml(el.s)}</button>
+        `;
+      }).join('');
+
+      table.innerHTML = rowLabels + tiles;
+      table.querySelectorAll('[data-period-symbol]').forEach(btn => {
+        btn.onclick = () => selectElement(btn.dataset.periodSymbol);
+      });
+
+      dots.innerHTML = periodLessonSteps.map((item, index) => `
+        <button
+          type="button"
+          class="period-dot ${index === periodLessonIndex ? 'active' : ''}"
+          data-period-step="${index}"
+          aria-label="${item.title}"
+        >${item.period}</button>
+      `).join('');
+      dots.querySelectorAll('[data-period-step]').forEach(btn => {
+        btn.onclick = () => {
+          stopPeriodLesson();
+          periodLessonIndex = Number(btn.dataset.periodStep);
+          renderPeriodLesson();
+        };
+      });
+
+      narrative.innerHTML = `
+        <div class="period-speech">
+          <span class="mini-badge">${escapeHtml(step.kind)}</span>
+          <h3>${escapeHtml(step.title)} (${escapeHtml(step.roman)})</h3>
+          <p>${escapeHtml(step.message)}</p>
+        </div>
+        <div class="period-facts">
+          <div class="period-fact">
+            <span>Quantidade</span>
+            <strong>${escapeHtml(countText)}</strong>
+          </div>
+          <div class="period-fact">
+            <span>Sequência</span>
+            <strong>${escapeHtml(step.range)}</strong>
+          </div>
+          <div class="period-fact">
+            <span>Tipo</span>
+            <strong>${escapeHtml(step.kind)}</strong>
+          </div>
+          <div class="period-fact">
+            <span>Ideia-chave</span>
+            <strong>${escapeHtml(step.focus)}</strong>
+          </div>
+        </div>
+        <div class="period-speech secondary">
+          <p>${escapeHtml(step.secondary)}</p>
+        </div>
+        <div class="period-series-note">
+          Período significa linha horizontal: todos os elementos destacados compartilham o mesmo nível principal de energia, mesmo quando a série f aparece desenhada abaixo.
+        </div>
+      `;
+
+      const playBtn = document.getElementById('periodPlayBtn');
+      if(playBtn){
+        playBtn.textContent = periodLessonPlaying ? 'Pausar' : 'Reproduzir';
+        playBtn.setAttribute('aria-pressed', String(periodLessonPlaying));
+      }
+    }
+
+    function stopPeriodLesson(){
+      periodLessonPlaying = false;
+      clearTimeout(periodLessonTimer);
+      renderPeriodLesson();
+    }
+
+    function schedulePeriodLesson(){
+      clearTimeout(periodLessonTimer);
+      if(!periodLessonPlaying) return;
+      periodLessonTimer = setTimeout(() => {
+        if(periodLessonIndex >= periodLessonSteps.length - 1){
+          periodLessonPlaying = false;
+          renderPeriodLesson();
+          return;
+        }
+        periodLessonIndex += 1;
+        renderPeriodLesson();
+        schedulePeriodLesson();
+      }, periodLessonAutoDelay);
+    }
+
+    function playPeriodLesson(fromStart=false){
+      if(fromStart) periodLessonIndex = 0;
+      if(periodLessonIndex >= periodLessonSteps.length - 1 && !fromStart) periodLessonIndex = 0;
+      periodLessonPlaying = true;
+      renderPeriodLesson();
+      schedulePeriodLesson();
+    }
+
     function renderQuizQuestion(){
       const q = buildQuizQuestion();
       state.quiz.answer = q.answer.s;
@@ -1484,6 +1749,7 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       renderGrid(periodicGrid, false);
       renderPreviewDock();
       renderFamiliesTab();
+      renderPeriodLesson();
       renderTrendMaps();
       favoriteCount.textContent = state.favorites.length;
       visibleCount.textContent = currentElements().filter(isVisible).length;
@@ -1688,6 +1954,39 @@ Cn|radioativo, de vida curta|nunca encontrado na natureza, sem usos
       document.getElementById('quizHint').textContent = 'Placar zerado. Gere uma nova pergunta.';
       renderQuizGrid();
     };
+
+    const periodReplayBtn = document.getElementById('periodReplayBtn');
+    const periodPrevBtn = document.getElementById('periodPrevBtn');
+    const periodNextBtn = document.getElementById('periodNextBtn');
+    const periodPlayBtn = document.getElementById('periodPlayBtn');
+    if(periodReplayBtn){
+      periodReplayBtn.onclick = () => playPeriodLesson(true);
+    }
+    if(periodPrevBtn){
+      periodPrevBtn.onclick = () => {
+        periodLessonPlaying = false;
+        clearTimeout(periodLessonTimer);
+        periodLessonIndex = (periodLessonIndex - 1 + periodLessonSteps.length) % periodLessonSteps.length;
+        renderPeriodLesson();
+      };
+    }
+    if(periodNextBtn){
+      periodNextBtn.onclick = () => {
+        periodLessonPlaying = false;
+        clearTimeout(periodLessonTimer);
+        periodLessonIndex = (periodLessonIndex + 1) % periodLessonSteps.length;
+        renderPeriodLesson();
+      };
+    }
+    if(periodPlayBtn){
+      periodPlayBtn.onclick = () => {
+        if(periodLessonPlaying){
+          stopPeriodLesson();
+        }else{
+          playPeriodLesson(false);
+        }
+      };
+    }
 
     function handleGridZoom(e){
       if(!e.ctrlKey) return;
